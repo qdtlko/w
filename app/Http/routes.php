@@ -11,6 +11,7 @@
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,4 +19,17 @@ Route::get('/', function () {
 
 Route::group(['namespace'=>'Backend'],function(){
     Route::get('index','IndexController@index');
+});
+*/
+
+
+
+Route::group(['namespace' => 'Backend', 'middleware' => ['auth']], function () {
+    Route::get('/', 'IndexController@index');
+});
+
+Route::group(['namespace' => 'Auth'], function () {
+    Route::get('auth/login', 'AuthController@getLogin');
+    Route::post('auth/login', 'AuthController@postLogin');
+    Route::get('auth/logout', 'AuthController@getLogout');
 });

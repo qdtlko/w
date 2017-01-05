@@ -23,4 +23,19 @@ class RedirectIfAuthenticated
 
         return $next($request);
     }
+
+
+
+//    public function handle($request, Closure $next)
+//    {
+//        // 设置登录之后，输入/auth/login的跳转地址
+//        if ($this->auth->check()) {
+//            return redirect('/');
+//        }
+//
+//        return $next($request);
+//    }
+
+
+
 }

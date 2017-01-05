@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Gregwar\Captcha\CaptchaBuilder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -29,6 +32,16 @@ class AuthController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
+
+
+// 设置成功登录后转向的页面：
+    protected $redirectPath = '/';
+
+// 设置登录失败后转向的页面：
+    protected $loginPath = '/auth/login';
+
+// 设置退出登录后转向的页面：
+    protected $redirectAfterLogout = '/';
 
     /**
      * Create a new authentication controller instance.
@@ -68,5 +81,36 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+
+    public function getLogin()
+    {
+        if (view()->exists('auth.authenticate')) {
+            return view('auth.authenticate');
+        }
+
+        $builder = new CaptchaBuilder();
+        $builder->build();
+        Session::put('phrase', $builder->getPhrase());
+
+        return view('auth.login')->with('captcha', $builder->inline());
+    }
+
+    public function postLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->loginUsername() => 'required',
+            'password'             => 'required',
+            'captcha'              => 'required'
+        ], [
+            $this->loginUsername() . '.required' => '请输入邮箱或用户名称',
+            'password.required'                  => '请输入用户密码',
+            'captcha.required'                   => '请输入验证码'
+        ]);
+
+        if (Session::get('phrase') !== $request->get('captcha')) {
+            return redirect()->back()->withErrors(array('captcha' => '验证码不正确'))->withInput();
+        }
     }
 }
