@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::group(['namespace'=>'Backend'],function(){
+    Route::get('index','IndexController@index');
+});
