@@ -26,8 +26,13 @@ Route::group(['namespace'=>'Backend'],function(){
 
 //Route::group(['namespace' => 'Backend', 'middleware' => ['auth']], function () {
 Route::group(['namespace' => 'Backend'], function () {
-    Route::get('/', 'IndexController@index');
+
+    Route::get('/', ['as' => 'index.index', 'uses' => 'IndexController@index']);
+//    Route::get('/', 'IndexController@index');
     Route::resource('user', 'UserController');
+    Route::resource('menu', 'MenuController');
+    Route::resource('role', 'RoleController');
+    Route::resource('permission','PermissionController');
 });
 
 Route::group(['namespace' => 'Auth'], function () {
