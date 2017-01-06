@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Menu;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
         $this->call(UserTableSeeder::class);
         $this->call(MenuTableSeeder::class);
+        $this->call(RoleTableSeeder::class);
         Model::reguard();
     }
 }
@@ -34,7 +36,6 @@ class UserTableSeeder extends Seeder
         User::create(['name' => 'admin', 'email' => 'admin@qq.com', 'password' => bcrypt(123456)]);
     }
 }
-
 
 
 class MenuTableSeeder extends Seeder
@@ -60,6 +61,17 @@ class MenuTableSeeder extends Seeder
         Menu::create(["parent_id" => "15", "name" => "用户列表", "url" => "user.index", 'description' => '管理用户的新增、编辑、删除']);
         Menu::create(["parent_id" => "15", "name" => "新增用户", "url" => "user.create", 'description' => '新增用户的页面']);
         Menu::create(["parent_id" => "15", "name" => "编辑用户", "url" => "user.edit", 'description' => '编辑用户的页面', 'is_hide' => 1]);
+    }
+}
+
+
+class RoleTableSeeder extends Seeder
+{
+    public function run()
+    {
+        DB::table('roles')->delete();
+        Role::create(['name' => 'admin', 'display_name' => 'User Administrator', 'description' => 'User is allowed to manage and edit other users']);
+        Role::create(['name' => 'owner', 'display_name' => 'Project Owner', 'description' => 'User is the owner of a given project']);
     }
 }
 
