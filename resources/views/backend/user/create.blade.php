@@ -12,11 +12,11 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">用户角色</label>
                             <div class="col-sm-9">
-                                <select class="form-control select2" name="role_id">
-                                    <option value="0">/</option>
-                                    {{--@foreach($roles as $role)--}}
-                                    {{--<option value="{{$role->id}}">{{$role->display_name}}</option>--}}
-                                    {{--@endforeach--}}
+                                <select class="form-control select2" multiple="multiple" name="role_id[]">
+                                    {{--<option value="0">/</option>--}}
+                                    @foreach($roles as $role)
+                                    <option value="{{$role->id}}">{{$role->display_name}}</option>
+                                    @endforeach
                                 </select>
                                 @include('backend.layout.message.tips',['field'=>'role_id'])
                             </div>
@@ -51,9 +51,10 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <button type="button" class="btn btn-default" onclick="javascript:history.back(-1);return false;">
-                            返回
-                        </button>
+                        {{--<button type="button" class="btn btn-default" onclick="javascript:history.back(-1);return false;">--}}
+                            {{--返回--}}
+                        {{--</button>--}}
+                        <a class="btn btn-default" href="{{route('user.index')}}">返回</a>
                         <button type="submit" class="btn btn-danger pull-right">确 定</button>
                     </div>
                 </form>

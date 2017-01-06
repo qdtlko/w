@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Permission;
+use App\Models\PermissionRole;
 use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\User;
 use App\Models\Menu;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +25,8 @@ class DatabaseSeeder extends Seeder
         $this->call(MenuTableSeeder::class);
         $this->call(RoleTableSeeder::class);
         $this->call(PermissionTableSeeder::class);
+        $this->call("RoleUserTableSeeder");
+        $this->call("PermissionRoleTableSeeder");
         Model::reguard();
     }
 }
@@ -97,5 +101,31 @@ class PermissionTableSeeder extends Seeder
         Permission::create(["display_name" => "用户列表", "name" => "user.index", 'description' => '管理用户的新增、编辑、删除']);
         Permission::create(["display_name" => "新增用户", "name" => "user.create", 'description' => '新增用户的页面']);
         Permission::create(["display_name" => "编辑用户", "name" => "user.edit", 'description' => '编辑用户的页面']);
+    }
+}
+
+
+class RoleUserTableSeeder extends Seeder
+{
+    public function run()
+    {
+        DB::table('role_user')->delete();
+        RoleUser::create(['user_id' => 3, 'role_id' => 1]);
+        RoleUser::create(['user_id' => 2, 'role_id' => 2]);
+        RoleUser::create(['user_id' => 1, 'role_id' => 2]);
+    }
+}
+
+
+class PermissionRoleTableSeeder extends Seeder
+{
+    public function run()
+    {
+        DB::table('permission_role')->delete();
+        for ($i = 1; $i < 3; $i++) {
+            for ($j = 1; $j < 15; $j++) {
+                PermissionRole::create(['permission_id' => $j, 'role_id' => $i]);
+            }
+        }
     }
 }

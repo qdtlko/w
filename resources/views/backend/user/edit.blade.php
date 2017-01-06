@@ -11,6 +11,17 @@
                     </div>
                     <div class="box-body">
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">用户角色</label>
+                            <div class="col-sm-9">
+                                <select class="form-control select2" multiple="multiple" name="role_id[]" style="width: 100%">
+                                    @foreach($roles as $role)
+                                        <option value="{{$role->id}}" @if(in_array($role->display_name,$displayNames)) selected @endif>{{$role->display_name}}</option>
+                                    @endforeach
+                                </select>
+                                @include('backend.layout.message.tips',['field'=>'role_id'])
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="name" class="col-sm-3 control-label">用户名称</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="name" name="name" placeholder="用户名称" value="{{$user->name}}">
@@ -50,10 +61,10 @@
         </div>
     </div>
 @stop
-@section('script')
-    <script type="text/javascript">
-        $(function () {
-            $(".select2").select2();
-        });
-    </script>
-@stop
+{{--@section('script')--}}
+    {{--<script type="text/javascript">--}}
+        {{--$(function () {--}}
+            {{--$(".select2").select2();--}}
+        {{--});--}}
+    {{--</script>--}}
+{{--@stop--}}

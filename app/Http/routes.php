@@ -24,7 +24,7 @@ Route::group(['namespace'=>'Backend'],function(){
 
 
 
-//Route::group(['namespace' => 'Backend', 'middleware' => ['auth']], function () {
+//Route::group(['namespace' => 'Backend', 'middleware' => ['auth','Entrust']], function () {
 Route::group(['namespace' => 'Backend'], function () {
 
     Route::get('/', ['as' => 'index.index', 'uses' => 'IndexController@index']);

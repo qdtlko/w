@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Requests\Form\UserForm;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('backend.user.create');
+//        return view('backend.user.create');
+
+        $roles = Role::all();
+        return view('backend.user.create', compact('roles'));
     }
 
     /**
@@ -47,9 +51,27 @@ class UserController extends Controller
             'password' => bcrypt($request['password']),
         ];
 
+//        try {
+//            if (User::create($data)) {
+//                return redirect()->back()->withSuccess('新增用户成功');
+//            }
+//        } catch (\Exception $e) {
+//            return redirect()->back()->withErrors(array('error' => $e->getMessage()))->withInput();
+//        }
+
+
         try {
-            if (User::create($data)) {
-                return redirect()->back()->withSuccess('新增用户成功');
+            $roles = Role::whereIn('id', $request->get('role_id'))->get();
+            if (empty($roles->toArray())) {
+                return redirect()->back()->withErrors("用户角色不存在，请刷新页面并选择其他用户角色")->withInput();
+            }
+
+            $user = User::create($data);
+            if ($user) {
+                foreach ($roles as $role) {
+                    $user->attachRole($role);
+                }
+                return redirect()->route('user.index')->withSuccess('新增用户成功');
             }
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(array('error' => $e->getMessage()))->withInput();
@@ -77,8 +99,13 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-
-        return view('backend.user.edit', compact('user'));
+//        return view('backend.user.edit', compact('user'));
+        $roles = Role::all();
+        $userRoles = $user->roles->toArray();
+        $displayNames = array_map(function ($value) {
+            return $value['display_name'];
+        }, $userRoles);
+        return view('backend.user.edit', compact('user', 'roles', 'displayNames'));
     }
 
     /**
@@ -90,15 +117,37 @@ class UserController extends Controller
      */
     public function update(UserForm $request, $id)
     {
-        $data = [
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => bcrypt($request['password']),
-        ];
+//        $data = [
+//            'name' => $request['name'],
+//            'email' => $request['email'],
+//            'password' => bcrypt($request['password']),
+//        ];
+//
+//        try {
+//            if (User::where('id', $id)->update($data)) {
+//                return redirect()->back()->withSuccess('编辑用户成功');
+//            }
+//        } catch (\Exception $e) {
+//            return redirect()->back()->withErrors(array('error' => $e->getMessage()))->withInput();
+//        }
+
+
+        $user = User::find($id);
+        $user->name = $request['name'];
+        $user->email = $request['email'];
+        $user->password = bcrypt($request['password']);
 
         try {
-            if (User::where('id', $id)->update($data)) {
-                return redirect()->back()->withSuccess('编辑用户成功');
+            $roles = Role::whereIn('id', $request->get('role_id'))->get();
+            if (empty($roles->toArray())) {
+                return redirect()->back()->withErrors("用户角色不存在,请刷新页面并选择其他用户角色")->withInput();
+            } else {
+                if ($user->save()) {
+                    foreach ($roles as $role) {
+                        $user->attachRole($role);
+                    }
+                    return redirect()->route('user.index')->withSuccess('编辑用户成功');
+                }
             }
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(array('error' => $e->getMessage()))->withInput();

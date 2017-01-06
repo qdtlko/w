@@ -42,12 +42,17 @@
                                 <td>{{$user->id}}</td>
                                 <td>{{$user->name}}</td>
                                 <td>{{$user->email}}</td>
-                                <td></td>
+                                <td>
+                                    @foreach($user->roles as $role)
+                                        {{$role->display_name}}
+                                    @endforeach
+                                </td>
                                 <td>
                                     <a class="btn btn-info" href="{{URL::to('user/'.$user->id.'/edit')}}">
                                         编辑
                                     </a>
-                                    <button class="btn btn-danger" data-toggle="modal" data-target="#defalutModal" data-url="{{URL::to('user/'.$user->id)}}">
+                                    <button class="btn btn-danger" data-toggle="modal" data-target="#defalutModal"
+                                            data-url="{{URL::to('user/'.$user->id)}}">
                                         删除
                                     </button>
                                 </td>
