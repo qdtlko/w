@@ -112,5 +112,6 @@ class AuthController extends Controller
         if (Session::get('phrase') !== $request->get('captcha')) {
             return redirect()->back()->withErrors(array('captcha' => '验证码不正确'))->withInput();
         }
+        return redirect('user');
     }
 }
