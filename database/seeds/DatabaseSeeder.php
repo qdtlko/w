@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Menu;
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UserTableSeeder::class);
         $this->call(MenuTableSeeder::class);
         $this->call(RoleTableSeeder::class);
+        $this->call(PermissionTableSeeder::class);
         Model::reguard();
     }
 }
@@ -75,3 +77,25 @@ class RoleTableSeeder extends Seeder
     }
 }
 
+
+class PermissionTableSeeder extends Seeder
+{
+    public function run()
+    {
+        DB::table('permissions')->delete();
+        Permission::create(["display_name" => "首页管理", "name" => "index.index", 'description' => '展示系统的各项基础数据']);
+        Permission::create(["display_name" => "菜单列表", "name" => "menu.index", 'description' => '管理菜单的新增、编辑、删除']);
+        Permission::create(["display_name" => "新增菜单", "name" => "menu.create", 'description' => '新增菜单的页面']);
+        Permission::create(["display_name" => "编辑菜单", "name" => "menu.edit", 'description' => '编辑菜单的页面']);
+        Permission::create(["display_name" => "角色列表", "name" => "role.index", 'description' => '管理角色的新增、编辑、删除']);
+        Permission::create(["display_name" => "新增角色", "name" => "role.create", 'description' => '新增角色的页面']);
+        Permission::create(["display_name" => "编辑角色", "name" => "role.edit", 'description' => '编辑角色的页面']);
+        Permission::create(["display_name" => "角色赋权", "name" => "role.show", 'description' => '编辑角色的页面']);
+        Permission::create(["display_name" => "权限列表", "name" => "permission.index", 'description' => '管理权限的新增、编辑、删除']);
+        Permission::create(["display_name" => "新增权限", "name" => "permission.create", 'description' => '新增权限的页面']);
+        Permission::create(["display_name" => "编辑权限", "name" => "permission.edit", 'description' => '编辑权限的页面']);
+        Permission::create(["display_name" => "用户列表", "name" => "user.index", 'description' => '管理用户的新增、编辑、删除']);
+        Permission::create(["display_name" => "新增用户", "name" => "user.create", 'description' => '新增用户的页面']);
+        Permission::create(["display_name" => "编辑用户", "name" => "user.edit", 'description' => '编辑用户的页面']);
+    }
+}
